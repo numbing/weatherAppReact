@@ -6,7 +6,6 @@ import Weather from './components/weather';
 
 const API_KEY = "e5ced403947117877134523bd0915d32\n";
 
-
 class App extends Component {
     state = {
         temperature: undefined,
@@ -17,14 +16,21 @@ class App extends Component {
         error: undefined
     };
 
-    getWeather = async (e) => {
+    getWeather = (e) => {
         e.preventDefault();
         const city = e.target.elements.city.value;
         const country = e.target.elements.country.value;
-        const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
-        const data = await api_call.json();
+        const upDate = this.updateState;
+        return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`)
+            .then(function (apiCall) {
+                return apiCall.json();
+            }).then(function (data) {
+            upDate(data, city, country);
+        })
+    };
+
+    updateState = (data, city, country) => {
         if (city && country) {
-            console.log(data);
             this.setState({
                 temperature: data.main.temp,
                 city: data.name,
@@ -42,11 +48,9 @@ class App extends Component {
                 humidity: undefined,
                 description: undefined,
                 error: "please enter name of city and country !"
-
             });
         }
-
-    }
+    };
 
     render() {
         return (
