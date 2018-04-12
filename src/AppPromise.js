@@ -26,7 +26,9 @@ class App extends Component {
                 return apiCall.json();
             }).then(function (data) {
             upDate(data, city, country);
-        })
+        }).catch(function (error) {
+                alert("name of the city or country is wrong");
+            })
     };
 
     updateState = (data, city, country) => {
